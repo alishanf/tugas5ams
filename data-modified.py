@@ -39,11 +39,13 @@ count_vect = CountVectorizer()
 #transform ke bentuk vector pake tf-idf
 X_train_counts = count_vect.fit_transform(train_sentences)
 # tfidf_transformer = TfidfTransformer(smooth_idf=False) #pake tf
-# tfidf_transformer = TfidfTransformer(smooth_idf=True) #pake idf
-tfidf_transformer = TfidfTransformer() #pake tfidf
+tfidf_transformer = TfidfTransformer(smooth_idf=True) #pake idf
+# tfidf_transformer = TfidfTransformer() #pake tfidf
 X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
-
+# print X_train_tfidf
 print X_train_counts.shape
+print "Algoritma yang digunakan adalah SGDClassifier"
+print "Menggunakan IDF"
 print 'Jumlah vocabulary di data_train:'
 print count_vect.vocabulary_.get(u'algorithm')
 
@@ -66,7 +68,7 @@ X_old_counts = count_vect.transform(train_sentences)
 X_old_tfidf = tfidf_transformer.transform(X_old_counts)
 predicted_train = clf.predict(X_old_tfidf)
 print 'Akurasi:'
-print np.mean(predicted_train == train_labels)
+print np.mean(predicted == test_labels)
 
 # for doc, category in zip(docs_new, predicted):
 #   print('%r,%s' % (doc, predicted))
