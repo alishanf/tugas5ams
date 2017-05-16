@@ -4,10 +4,9 @@ from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB, BernoulliNB
 from sklearn.neighbors.nearest_centroid import NearestCentroid
 from sklearn.linear_model import SGDClassifier
+from sklearn import svm
 import numpy as np
 from sklearn import metrics
-from nltk.corpus import wordnet as wn
-from nltk.stem import WordNetLemmatizer
 
 csv.field_size_limit(500000)
 
@@ -15,13 +14,12 @@ csv.field_size_limit(500000)
 def load_data(dataset):
     sentences = []
     labels = []
-    wordnet_lemmatizer = WordNetLemmatizer()
+    
     with open(dataset, 'rU') as file:
         reader = csv.DictReader(file)
         for row in reader:
             try:
-               # text = row['text']
-               text = wordnet_lemmatizer.lemmatize(row['text'])
+               text = row['text']
                type = row['type']
 
                sentences.append(text)
@@ -35,24 +33,25 @@ def load_data(dataset):
 
 train_sentences, train_labels = load_data("fake_train.csv")
 test_sentences, test_labels = load_data("fake_test.csv")
+
 #Tokenizing text
 count_vect = CountVectorizer()
 
 #transform ke bentuk vector pake tf-idf
 X_train_counts = count_vect.fit_transform(train_sentences)
 # tfidf_transformer = TfidfTransformer(smooth_idf=False) #pake tf
-# tfidf_transformer = TfidfTransformer(smooth_idf=True) #pake idf
-tfidf_transformer = TfidfTransformer() #pake tfidf
+tfidf_transformer = TfidfTransformer(smooth_idf=True) #pake idf
+# tfidf_transformer = TfidfTransformer() #pake tfidf
 X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
 # print X_train_tfidf
 print X_train_counts.shape
-print "Algoritma yang digunakan adalah SGDClassifier"
-print "Menggunakan IDF"
+print "Algoritma yang digunakan adalah SVM"
+print "Menggunakan TFIDF"
 print 'Jumlah vocabulary di data_train:'
 print count_vect.vocabulary_.get(u'algorithm')
 
 #text classification algorithm
-clf = SGDClassifier().fit(X_train_tfidf, train_labels)
+clf = svm.SVC().fit(X_train_tfidf, train_labels)
 
 #ubah data test ke bentuk vector tfidf
 X_new_counts = count_vect.transform(test_sentences)
