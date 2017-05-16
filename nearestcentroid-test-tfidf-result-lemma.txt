@@ -1,6 +1,6 @@
 (1326, 29098)
 Algoritma yang digunakan adalah NearestCentroid
-Menggunakan TFIDF
+Menggunakan TF
 Jumlah vocabulary di data_train:
 1821
 conspiracy
