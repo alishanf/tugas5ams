@@ -1,5 +1,0 @@
-(1326, 33257)
-Algoritma yang digunakan adalah NearestNeighbour
-Menggunakan TFIDF
-Jumlah vocabulary di data_train:
-1915

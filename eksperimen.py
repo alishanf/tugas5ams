@@ -8,6 +8,7 @@ import numpy as np
 from sklearn import metrics
 from nltk.corpus import wordnet as wn
 from nltk.stem import WordNetLemmatizer
+from nltk import word_tokenize
 
 csv.field_size_limit(500000)
 
@@ -16,15 +17,24 @@ def load_data(dataset):
     sentences = []
     labels = []
     wordnet_lemmatizer = WordNetLemmatizer()
+    thesentence=""
     with open(dataset, 'rU') as file:
         reader = csv.DictReader(file)
         for row in reader:
             try:
                # text = row['text']
-               text = wordnet_lemmatizer.lemmatize(row['text'])
+               words_tokenize = word_tokenize(row['text'])
+               # print words_tokenize
+               for words in words_tokenize:
+                text = wordnet_lemmatizer.lemmatize(words,'v')
+                thesentence = thesentence+" "+text            
+                # print text+"\n"
+                # text = wordnet_lemmatizer.lemmatize(row['text'], 'v')
+               # print text+"\n"
+               thesentence+="\n"
+               # print thesentence
                type = row['type']
-
-               sentences.append(text)
+               sentences.append(thesentence)
                labels.append(type)
             except:
                 continue
@@ -35,6 +45,7 @@ def load_data(dataset):
 
 train_sentences, train_labels = load_data("fake_train.csv")
 test_sentences, test_labels = load_data("fake_test.csv")
+# print train_sentences
 #Tokenizing text
 count_vect = CountVectorizer()
 
@@ -47,7 +58,7 @@ X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
 # print X_train_tfidf
 print X_train_counts.shape
 print "Algoritma yang digunakan adalah SGDClassifier"
-print "Menggunakan IDF"
+print "Menggunakan TFIDF"
 print 'Jumlah vocabulary di data_train:'
 print count_vect.vocabulary_.get(u'algorithm')
 
