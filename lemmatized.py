@@ -9,7 +9,12 @@ from sklearn import metrics
 from nltk.corpus import wordnet as wn
 from nltk.stem import WordNetLemmatizer
 from nltk import word_tokenize
+from sklearn import linear_model
 from sklearn import svm
+from nltk.corpus import stopwords
+
+stop = set(stopwords.words('english'))
+stop.update(['.', ',', '"', "'", '?', '!', ':', ';', '(', ')', '[', ']', '{', '}'])
 
 csv.field_size_limit(500000)
 
@@ -26,9 +31,10 @@ def load_data(dataset):
                text = word_tokenize(row['text'])
                thesentence=""
                for words in text:
-                lemmed_words = wordnet_lemmatizer.lemmatize(words,'v')
-                # lemmed_words = wordnet_lemmatizer.lemmatize(words)
-                thesentence = thesentence + " " + lemmed_words
+                if words.lower() not in stop:
+                 lemmed_words = wordnet_lemmatizer.lemmatize(words,'v')
+                 # lemmed_words = wordnet_lemmatizer.lemmatize(words)
+                 thesentence = thesentence + " " + lemmed_words
 
                thesentence+="\n"
                # print thesentence
@@ -61,8 +67,12 @@ print 'Jumlah vocabulary di data_train:'
 print count_vect.vocabulary_.get(u'algorithm')
 
 #text classification algorithm
+
 # clf = svm.SVC().fit(X_train_tfidf, train_labels)
-clf = svm.SVC(kernel='linear', probability=True, class_weight='auto').fit(X_train_tfidf, train_labels)
+# clf = svm.SVC(kernel='linear', probability=True, class_weight='auto').fit(X_train_tfidf, train_labels)
+
+clf = SGDClassifier().fit(X_train_tfidf, train_labels)
+
 
 #ubah data test ke bentuk vector tfidf
 X_new_counts = count_vect.transform(test_sentences)
