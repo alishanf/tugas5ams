@@ -49,19 +49,20 @@ count_vect = CountVectorizer()
 
 #transform ke bentuk vector pake tf-idf
 X_train_counts = count_vect.fit_transform(train_sentences)
-tfidf_transformer = TfidfTransformer(smooth_idf=False) #pake tf
+# tfidf_transformer = TfidfTransformer(smooth_idf=False) #pake tf
 # tfidf_transformer = TfidfTransformer(smooth_idf=True) #pake idf
-# tfidf_transformer = TfidfTransformer() #pake tfidf
+tfidf_transformer = TfidfTransformer() #pake tfidf
 X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
 # print X_train_tfidf
 print X_train_counts.shape
-print "Algoritma yang digunakan adalah SGDClassifier"
-print "Menggunakan TF"
+# print "Algoritma yang digunakan adalah NearestCentroid"
+# print "Menggunakan TF"
 print 'Jumlah vocabulary di data_train:'
 print count_vect.vocabulary_.get(u'algorithm')
 
 #text classification algorithm
-clf = SGDClassifier().fit(X_train_tfidf, train_labels)
+# clf = svm.SVC().fit(X_train_tfidf, train_labels)
+clf = svm.SVC(kernel='linear', probability=True, class_weight='auto').fit(X_train_tfidf, train_labels)
 
 #ubah data test ke bentuk vector tfidf
 X_new_counts = count_vect.transform(test_sentences)
