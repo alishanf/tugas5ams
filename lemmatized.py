@@ -13,7 +13,8 @@ from sklearn import linear_model
 from sklearn import svm
 from nltk.corpus import stopwords
 
-# stop = set(stopwords.words('english'))
+stop = set(stopwords.words('english'))
+stop.update(['.', ',', '"', "'", '?', '!', ':', ';', '(', ')', '[', ']', '{', '}'])
 
 csv.field_size_limit(500000)
 
@@ -29,9 +30,8 @@ def load_data(dataset):
                # text = row['text']
                text = word_tokenize(row['text'])
                thesentence=""
-               alist =["a","an","the","The","A","An","in","In",".",","] 
                for words in text:
-                if words not in alist:
+                if words.lower() not in stop:
                  lemmed_words = wordnet_lemmatizer.lemmatize(words,'v')
                  # lemmed_words = wordnet_lemmatizer.lemmatize(words)
                  thesentence = thesentence + " " + lemmed_words
